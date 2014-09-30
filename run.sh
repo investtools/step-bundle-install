@@ -1,5 +1,6 @@
 #!/bin/sh
 bundle_command="bundle install"
+working_dir="$PWD"
 
 if [ -z "$WERCKER_BUNDLE_INSTALL_PATH" ] ; # Check $WERCKER_BUNDLE_INSTALL exists
 then
@@ -49,6 +50,10 @@ if [ -n "$WERCKER_BUNDLE_INSTALL_JOBS" ] ; then
     fi
 fi
 
+if [ -n "$WERCKER_BUNDLE_INSTALL_WORKING_DIR" ] ; then
+    working_dir="$working_dir/$WERCKER_BUNDLE_INSTALL_WORKING_DIR"
+fi
+
 install_bundler() {
     # Install bundler gem if needed
     if ! type bundle &> /dev/null; then
@@ -68,15 +73,15 @@ install_bundler() {
     debug "bundle version: $(bundle --version)";
 }
 
-if [ ! -e "$PWD/Gemfile" ]; then
-    info "Skipping bundle install because Gemfile not found in $PWD";
+if [ ! -e "$working_dir" ]; then
+    info "Skipping bundle install because Gemfile not found in $working_dir";
 else
     info 'Gemfile found. Start bundle install.';
 
     install_bundler;
 
     debug "$bundle_command";
-    $bundle_command;
+    cd "$working_dir" && $bundle_command;
 
     if [[ $? -ne 0 ]]; then
         fail 'bundle install command failed';

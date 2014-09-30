@@ -22,6 +22,7 @@ This is an _smart_ version of the `bundle install` command that stores downloade
 * `local` (optional) Do not attempt to fetch gems remotely and use the gem cache instead.
 * `frozen` (optional) Do not allow the Gemfile.lock to be updated after this install.
 * `jobs` (optional) Install gems parallely by starting the number of workers specified (require at least bundler `1.5`).
+* `working_dir` (optional, default: app root) The path (relative to app) where Gemfile is located.
 
 # Example
 
